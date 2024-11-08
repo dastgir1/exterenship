@@ -110,8 +110,8 @@ function externship_get_list_table_row($row, $editing) {
     $context = context_course::instance($courseid->course); 
     $student_role_id=5;
     // Start building the table row
-    $result = "\t<tbody id='entrytable'>\n";
-    $result .= "\t<tr>\n";
+    // $result = "\t<tbody id='entrytable'>\n";
+    $result = "\t<tr>\n";
     
     // If editing is enabled, show edit and delete icons
     if ($row->approval==0) {
@@ -219,7 +219,8 @@ function externship_get_list_table_row($row, $editing) {
     $fs = get_file_storage();
     // $files = $fs->get_area_files($cm_context->id , 'mod_externship', 'file',$row->id);
     $files = $fs->get_area_files($cm_context->id, 'mod_externship', 'file', $row->id, 'sortorder DESC', false);
-
+ 
+    
     $download_url = '';
     foreach ($files as $file) {
         // Check if the file is not the directory placeholder ('.').
@@ -257,9 +258,27 @@ function externship_get_list_table_row($row, $editing) {
     //     // Default picture URL or handle missing picture.
     //     $download_url = null;
     // }
+  
     $result .= "\t\t<td>";
-        $result .='<a href="'.$download_url.'" preview="">
-            <img src="'.$download_url.'" alt="Download Image" width="50" height="50"/>
+    $extension = pathinfo($download_url, PATHINFO_EXTENSION); // Get the file extension
+
+    // Set default variables for icon and preview
+    $icon = '';
+    $preview = '';
+
+    if (in_array($extension, ['png', 'jpg', 'jpeg'])) {
+        $icon = $download_url; // Use the image itself as the icon
+        $preview = 'preview'; // Set preview attribute for images
+    } elseif ($extension == 'pdf') {
+        $icon = '/mod/externship/pix/pdf.jpg'; // Path to your PDF icon
+        $preview = ''; // No preview for PDF
+    } elseif (in_array($extension, ['doc', 'docx'])) {
+        $icon = '/mod/externship/pix/word (1).jpg'; // Path to your Word icon
+        $preview = ''; // No preview for Word document
+    }
+    
+        $result .='<a href="'.$download_url.'" '.$preview.'>
+            <img src="'.$icon.'" alt="Download Image" width="50" height="50"/>
         </a>';
     $result .= "</td>\n";
     // Adding the approve button conditionally based on the capability
@@ -281,7 +300,7 @@ function externship_get_list_table_row($row, $editing) {
     // Close the table row
     
     $result .= "\t</tr>\n";
-    $result .= "\t</tbody>\n";
+    // $result .= "\t</tbody>\n";
    
     return $result;
 }

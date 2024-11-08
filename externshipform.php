@@ -28,6 +28,7 @@ require_once("$CFG->libdir/formslib.php");
 require_once(dirname(__FILE__).'/lib.php');
 // require_once(dirname(__FILE__).'/locallib.php');
 // require_once($CFG->dirroot.'/mod/externship/form/externshipform.php');
+$PAGE->requires->js("/mod/externship/js/jquery.min.js");
 $PAGE->requires->js("/mod/externship/js/script.js");
 $dataid = optional_param('dataid',0,PARAM_INT);
 
